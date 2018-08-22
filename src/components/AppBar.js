@@ -14,6 +14,8 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import history from './history';
 import Button from '@material-ui/core/Button';
+import { login, logout, isLoggedIn } from '../utils/AuthService';
+
 
 const styles = {
   root: {
@@ -108,12 +110,23 @@ class MenuAppBar extends React.Component {
                   
                 </Menu>
               </div>
+           
+          {
+             (isLoggedIn()) ?
+             <Button variant="contained" color="secondary" >Log out </Button>
+             : (  
+                <Button variant="contained" color="primary"  onClick={() => login()}   >
+             Login
+           </Button>
+            )
+           }
           </Toolbar>
         </AppBar>
       </div>
     );
   }
 }
+
 
 MenuAppBar.propTypes = {
   classes: PropTypes.object.isRequired,
