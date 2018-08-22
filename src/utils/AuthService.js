@@ -7,7 +7,7 @@ const ACCESS_TOKEN_KEY = 'access_token';
 
 const CLIENT_ID = 'JZD3ZrH4oQgqNyF19Sb8cDmF5HZAgVY2';
 const CLIENT_DOMAIN = 'uploadapp.eu.auth0.com';
-const REDIRECT = 'https://experts-app.herokuapp.com/callback';
+const REDIRECT = 'https://diagnosis-app.herokuapp.com/callback';
 const SCOPE = 'full:access';
 const AUDIENCE = 'https://uploadapp.eu.auth0.com/userinfo';
 
