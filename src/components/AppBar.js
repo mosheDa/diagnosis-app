@@ -113,7 +113,7 @@ class MenuAppBar extends React.Component {
            
           {
              (isLoggedIn()) ?
-             <Button variant="contained" color="secondary" >Log out </Button>
+             <Button variant="contained" color="secondary" onClick={() => logout() }>Log out </Button>
              : (  
                 <Button variant="contained" color="primary"  onClick={() => login()}   >
              Login
