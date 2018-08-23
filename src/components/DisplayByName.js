@@ -174,7 +174,7 @@ class DisplayByName extends Component {
              </Video>
              <CardContent>
              <Typography component="p">
-             <div> {new Date(video.created_at).toDateString()}</div>                 
+             <div> {new Date(video.created_at).toLocaleDateString()}</div>                 
                  
                  {video.videoData && video.videoData.age ?  <div> Age: {video.videoData.age} </div>                      
                   : ""}

@@ -15,7 +15,15 @@ import Menu from '@material-ui/core/Menu';
 import history from './history';
 import Button from '@material-ui/core/Button';
 import { login, logout, isLoggedIn } from '../utils/AuthService';
-
+import Drawer from '@material-ui/core/Drawer';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import Divider from '@material-ui/core/Divider';
+import HomeIcon from '@material-ui/icons/Home';
+import BorderColorIcon from '@material-ui/icons/BorderColor';
+import LoginIcon from '@material-ui/icons/PowerSettingsNew';
 
 const styles = {
   root: {
@@ -53,10 +61,59 @@ class MenuAppBar extends React.Component {
     this.handleClose();    
   }
 
+  renderSwitch(loaction) {
+    switch(loaction) {
+      case '/':
+        return <span>Home</span>;
+      case '/select':
+        return <span>Diagnosis</span>;
+      default:
+        return  <span>{loaction.split("/")[2]}</span>;
+    }
+  }
+
   render() {
     const { classes } = this.props;
     const { auth, anchorEl } = this.state;
     const open = Boolean(anchorEl);
+    const sideList = (
+      <div className={classes.list}>
+         <div className={classes.root}>
+         <List component="nav">
+           <ListItem component="a" href="/">
+             <ListItemIcon>
+               <HomeIcon />
+             </ListItemIcon>
+             <ListItemText primary="Home" />
+           </ListItem>
+           <ListItem component="a" href="/select">
+             <ListItemIcon>
+               <BorderColorIcon />
+             </ListItemIcon>
+             <ListItemText primary="Diagnosis" />
+           </ListItem>
+         </List>
+         <Divider />
+         <List component="nav">
+         {
+           (!isLoggedIn()) ?
+         <ListItem button onClick={() => login()}>
+            <ListItemIcon>
+               <LoginIcon />
+             </ListItemIcon>
+             <ListItemText primary="Login" />
+           </ListItem>: 
+          ( <ListItem button  onClick={() => logout()}>
+            <ListItemIcon>
+                <LoginIcon />
+              </ListItemIcon>
+              <ListItemText primary="Logout" />
+           </ListItem>)
+         }
+         </List>
+       </div>
+      </div>
+    );
 
     return (
       <div className={classes.root}>
@@ -80,7 +137,8 @@ class MenuAppBar extends React.Component {
               <MenuIcon />
             </IconButton>
             <Typography variant="title" color="inherit" className={classes.flex}>
-              Diagnosis App
+               {this.renderSwitch(history.location.pathname)}
+             
             </Typography>
               <div>
                 {/* <IconButton
@@ -91,34 +149,26 @@ class MenuAppBar extends React.Component {
                 >
                   <AccountCircle />
                 </IconButton> */}
-                <Menu
-                  id="menu-appbar"
-                  anchorEl={anchorEl}
-                  anchorOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
-                  transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
-                  open={open}
-                  onClose={this.handleClose}
-                >
-                  <MenuItem onClick={this.homeRef}>Home</MenuItem>
-                  <MenuItem onClick={this.selectRef}>Select child</MenuItem>
-                  
-                </Menu>
+                <Drawer open={open} onClose={this.handleClose}>
+                  <div
+                    tabIndex={0}
+                    role="button"
+                    onClick={this.handleClose}
+                    onKeyDown={this.handleClose}
+                  >
+                    {sideList}
+                  </div> 
+                </Drawer> 
               </div>
            
           {
-             (isLoggedIn()) ?
-             <Button variant="contained" color="secondary" onClick={() => logout() }>Log out </Button>
-             : (  
-                <Button variant="contained" color="primary"  onClick={() => login()}   >
-             Login
-           </Button>
-            )
+          //    (isLoggedIn()) ?
+          //    <Button variant="contained" color="secondary" onClick={() => logout() }>Log out </Button>
+          //    : (  
+          //       <Button variant="contained" color="primary"  onClick={() => login()}   >
+          //    Login
+          //  </Button>
+          //   )
            }
           </Toolbar>
         </AppBar>
