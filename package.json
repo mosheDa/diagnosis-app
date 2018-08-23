@@ -16,6 +16,7 @@
     "react-image": "^1.4.1",
     "react-responsive-modal": "^3.2.0",
     "react-router": "^4.3.1",
+    "react-router-auth": "^1.0.1",
     "react-router-dom": "^4.3.1",
     "react-scripts": "1.1.4"
   },
