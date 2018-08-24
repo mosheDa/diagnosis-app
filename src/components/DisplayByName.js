@@ -26,6 +26,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import FloatGroup from 'react-float-button';
 import AddIcon from '@material-ui/icons/Add';
+import Rating from 'react-rating';
 
 const CLOUDBINARY_API_ENDPOINT = 'https://videos-diagnosis.herokuapp.com/videos/';
 const USERS_API_ENDPOINT = 'https://videos-diagnosis.herokuapp.com/users/';
@@ -33,7 +34,7 @@ const DIAGNOSIS_API_ENDPOINT = 'https://videos-diagnosis.herokuapp.com/diagnosis
 
 class DisplayByName extends Component {
 
-  state = {  open: false, videos: [], result:"", loading: true };
+  state = {  open: false, videos: [], result:"", rating:0, loading: true };
 
   getVideos(username) {
     axios.get(CLOUDBINARY_API_ENDPOINT + username)
@@ -53,7 +54,8 @@ class DisplayByName extends Component {
   getDiagnosis(username) {
     axios.get(USERS_API_ENDPOINT + username)
           .then(res => {
-            this.setState({ dignosis: res.data, result:res.data.result});
+            const rating = res.data.rating? res.data.rating: 0
+            this.setState({ dignosis: res.data, result:res.data.result, rating});
     });
   }
 
@@ -76,7 +78,7 @@ class DisplayByName extends Component {
   };
 
   onSubmit = () => {
-    const data = {result:this.state.result}
+    const data = {result:this.state.result, rating:this.state.rating }
     const url = DIAGNOSIS_API_ENDPOINT + this.state.dignosis._id;
     axios.put(url, data)
     .then(res => {
@@ -114,7 +116,7 @@ class DisplayByName extends Component {
     };
 
 
-    const { videos, open, username, loading }  = this.state;
+    const { videos, open, username, loading, rating }  = this.state;
 
     return (
       loading?  
@@ -152,7 +154,10 @@ class DisplayByName extends Component {
               fullWidth
               autoFocus
               onChange={this.onUpdateInputValue}
-            />  
+            />  <br/><br/>  
+            <div>
+            <Rating initialRating={rating} onChange={(rating)=>{this.setState({ ...this.state, rating})}}/>   
+              </div>
           </DialogContent>
           <DialogActions>
             <Button onClick={this.handleClose} color="primary">
@@ -188,9 +193,6 @@ class DisplayByName extends Component {
            </CardContent>
           
            <CardActions>
-             {/* <Button onClick={()=>{this.handleClick({userData}) } } size="small" color="primary">
-               Open diagnosis page
-             </Button> */}
             
            </CardActions>
          </Card>
