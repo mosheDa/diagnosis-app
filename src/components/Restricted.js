@@ -28,7 +28,7 @@ class Restricted extends Component {
     return (
       <div >
         <Button style={styles.login} onClick={login} variant="contained" color="primary">Please Login</Button>
-        <Img style={styles.image} src="https://www.seton.com/media/catalog/product/cache/4/image/85e4522595efc69f496374d01ef2bf13/1435185270/r/e/restricted-area-security-stop-signs-m9081-lg.png" />
+        {/* <Img style={styles.image} src="https://www.seton.com/media/catalog/product/cache/4/image/85e4522595efc69f496374d01ef2bf13/1435185270/r/e/restricted-area-security-stop-signs-m9081-lg.png" /> */}
       </div>
     );
   }

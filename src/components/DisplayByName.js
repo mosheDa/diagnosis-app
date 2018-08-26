@@ -23,9 +23,10 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
+import InputLabel from '@material-ui/core/InputLabel';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import FloatGroup from 'react-float-button';
-import AddIcon from '@material-ui/icons/Add';
+import CreateIcon from '@material-ui/icons/Create';
 import Rating from 'react-rating';
 
 const CLOUDBINARY_API_ENDPOINT = 'https://videos-diagnosis.herokuapp.com/videos/';
@@ -125,7 +126,7 @@ class DisplayByName extends Component {
        
        <div>
        <Button variant="fab" color="secondary" style={styles.addButton} onClick={this.handleClickOpen} aria-label="Add" >
-          <AddIcon />
+       <CreateIcon/>
        </Button>
         <Dialog
           open={this.state.open}
@@ -150,13 +151,14 @@ class DisplayByName extends Component {
               rowsMax={10}
               value={this.state.result}
               placeholder="Dignosis"
-              helperText=" fill diagnosis data..."
+              label="diagnosis data"
               fullWidth
               autoFocus
               onChange={this.onUpdateInputValue}
             />  <br/><br/>  
-            <div>
-            <Rating initialRating={rating} onChange={(rating)=>{this.setState({ ...this.state, rating})}}/>   
+            <div><br/>
+            <InputLabel>Risk level:</InputLabel><br/>
+            <Rating  initialRating={rating} onChange={(rating)=>{this.setState({ ...this.state, rating})}}/>   
               </div>
           </DialogContent>
           <DialogActions>
@@ -177,18 +179,20 @@ class DisplayByName extends Component {
            <Card style={styles.card}>      
              <Video controls width="250px" height="170px" publicId={video.public_id} >
              </Video>
+             <div style={{marginLeft:"7"}}>
+             <Typography  variant="subheading" gutterBottom>
+                  {new Date(video.created_at).toLocaleDateString()}
+            </Typography>
+            </div>
              <CardContent>
              <Typography component="p">
-             <div> {new Date(video.created_at).toLocaleDateString()}</div>                 
                  
-                 {video.videoData && video.videoData.age ?  <div> Age: {video.videoData.age} </div>                      
+                 {video.videoData && video.videoData.age ?  <div> Age: {video.videoData.age} {video.videoData.ageKind} </div>                      
                   : ""}
                    {video.videoData && video.videoData.videoInfo ?
                      <div> Note: {video.videoData.videoInfo}</div>  
                       : ""}
-                  Risk level: 5 <br/>
-                  Risk score: 5 <br/>                  
-  
+                  Risk score: 5 <br/>                    
              </Typography>
            </CardContent>
           
