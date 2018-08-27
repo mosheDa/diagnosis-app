@@ -21,6 +21,8 @@ import CardHeader from '@material-ui/core/CardHeader';
 import IconButton from '@material-ui/core/IconButton';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Switch from '@material-ui/core/Switch';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 const CLOUDBINARY_API_ENDPOINT = 'https://videos-diagnosis.herokuapp.com/users'
 // const CLOUDBINARY_API_ENDPOINT = 'http://localhost:3001/users'
@@ -29,20 +31,42 @@ const CLOUDBINARY_API_ENDPOINT = 'https://videos-diagnosis.herokuapp.com/users'
 
 class SelectChild extends Component {
 
-  state = { users: [], expertName:"",  loading: true };
+  state = { users: [], expertName:"",  loading: true, filter: false, usersToShow:[], filteredUsers:[] };
+  
+  // state = { users: [], expertName:"",  loading: true };
 
   getUsers() {
     axios.get(CLOUDBINARY_API_ENDPOINT)
           .then(res => {
-            this.setState({ ...this.state, users: res.data, loading: false});    
+            const filteredUsers = res.data.filter((user)=>{return user.videosCount > 0})
+            const usersToShow = res.data;
+             this.setState({ ...this.state, users: res.data, loading: false, filteredUsers, filter:false, usersToShow }); 
     });
   }
+
+  hideEmptyUsers(){
+  const usersToShow = this.state.filteredUsers;
+    const filter = true;
+    this.setState({usersToShow, filter})  
+  }
+ 
+   showEmptyUsers(){
+     const usersToShow = this.state.users;
+     const filter = false;   
+     this.setState({ usersToShow, filter});
+    }
+ 
+    handleFilterChange(){
+      console.log(this.state)
+      if(this.state.filter)this.showEmptyUsers.bind(this)()
+      else this.hideEmptyUsers.bind(this)()
+    }
 
   componentWillMount() {
     // const expertName = localStorage.getItem("username");
     const expertName = ""
     
-    this.setState({ ...this.state, expertName});
+    this.setState({ expertName});
     
     this.getUsers();
   }
@@ -74,15 +98,25 @@ class SelectChild extends Component {
       }
     };
 
-    const { users ,expertName, loading}  = this.state;
+    const { users, filteredUsers, usersToShow ,expertName, loading, filter}  = this.state;
   
     return (
  loading?  
  <CircularProgress style={styles.progress} size={100} />: <div >
      <div >
+     <FormControlLabel
+          control={
+            <Switch
+                checked={filter}
+                onChange={this.handleFilterChange.bind(this)}
+              />
+          }
+          label="Hide empty users"
+        />
+    
           <CloudinaryContext cloudName="dtvoiy5lg">
           <Grid container spacing={16}>
-            { users.map((userData, index) => (
+            { usersToShow.map((userData, index) => (
               <Grid item key={index} sm={6} md={4} lg={3}>
                <Card style={styles.card}>
                {/* <CardContent>
