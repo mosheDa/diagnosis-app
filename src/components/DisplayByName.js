@@ -35,7 +35,7 @@ const DIAGNOSIS_API_ENDPOINT = 'https://videos-diagnosis.herokuapp.com/diagnosis
 
 class DisplayByName extends Component {
 
-  state = {  open: false, videos: [], result:"", rating:0, loading: true };
+  state = {  open: false, videos: [], result:"", rating:1, loading: true };
 
   getVideos(username) {
     axios.get(CLOUDBINARY_API_ENDPOINT + username)
@@ -55,7 +55,7 @@ class DisplayByName extends Component {
   getDiagnosis(username) {
     axios.get(USERS_API_ENDPOINT + username)
           .then(res => {
-            const rating = res.data.rating? res.data.rating: 0
+            const rating = res.data.rating? res.data.rating: 1
             this.setState({ dignosis: res.data, result:res.data.result, rating});
     });
   }
@@ -158,7 +158,7 @@ class DisplayByName extends Component {
             />  <br/><br/>  
             <div><br/>
             <InputLabel>Risk level:</InputLabel><br/>
-            <Rating  initialRating={rating} onChange={(rating)=>{this.setState({ ...this.state, rating})}}/>   
+            <Rating stop={7}  initialRating={rating} onChange={(rating)=>{this.setState({ ...this.state, rating})}}/>   
               </div>
           </DialogContent>
           <DialogActions>
