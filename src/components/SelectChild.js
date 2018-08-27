@@ -39,9 +39,10 @@ class SelectChild extends Component {
     axios.get(CLOUDBINARY_API_ENDPOINT)
           .then(res => {
             const filteredUsers = res.data.filter((user)=>{return user.videosCount > 0})
-            const usersToShow = res.data;
-             this.setState({ ...this.state, users: res.data, loading: false, filteredUsers, filter:false, usersToShow }); 
-    });
+            // const usersToShow = res.data;
+            this.setState({ ...this.state, users: res.data, loading: false, filteredUsers, filter:false }); 
+            this.hideEmptyUsers.bind(this)()
+          });
   }
 
   hideEmptyUsers(){
@@ -57,7 +58,6 @@ class SelectChild extends Component {
     }
  
     handleFilterChange(){
-      console.log(this.state)
       if(this.state.filter)this.showEmptyUsers.bind(this)()
       else this.hideEmptyUsers.bind(this)()
     }
