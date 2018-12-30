@@ -1,37 +1,68 @@
+import Auth from './utils/AuthService';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Upload from './components/Upload';
 import Restricted from './components/Restricted';
-import Display from './components/Display';
 import DisplayByName from './components/DisplayByName';
 import SelectChild from './components/SelectChild';
 import Callback from './components/Callback';
+import Unauthorized from './components/Unauthorized';
 import Home from './components/Home';
 import registerServiceWorker from './registerServiceWorker';
-import { Switch,Router, Route , BrowserRouter} from 'react-router-dom'
-import { requireAuth } from './utils/AuthService';
+import { Router, Route  } from 'react-router-dom'
 import history from './components/history';
 import AppBar from './components/AppBar';
 import { AuthRoute } from 'react-router-auth';
-import { login, logout, isLoggedIn } from './utils/AuthService';
 
+const auth = new Auth();
+
+const handleAuthentication = ({location}) => {
+  if (/access_token|id_token|error/.test(location.hash)) {
+    auth.handleAuthentication();
+  }
+}
 
 const Root = () => {
+  
   return (
     
     <div className="container">
         <Router history={history}>
         <div>
-          <AppBar/>
-          <AuthRoute path="/select" component={SelectChild} redirectTo="/restricted" authenticated={isLoggedIn()} />
-          <AuthRoute path="/name/:username" component={DisplayByName} redirectTo="/restricted" authenticated={isLoggedIn()} />          
+          <AppBar auth={auth}/>
+          <Route path="/select" render={(props) => (
+             (!auth.isLoggedIn() ) ? (
+           <Restricted auth={auth} {...props} /> 
+           ) : (
+            !auth.userInGroup(['Experts']) ? (
+              <Unauthorized auth={auth} {...props} /> 
+              ) : (
+             (
+              <SelectChild auth={auth} {...props} />
+            )))
+          )} />
+           <Route path="/name/:username" render={(props) => (
+            (!auth.isLoggedIn() ) ? (
+              <Restricted auth={auth} {...props} />
+            ) : 
+            (
+              !auth.userInGroup(['Experts']) ? (
+               <Unauthorized auth={auth} {...props} /> 
+               ) : (
+              (
+               <DisplayByName auth={auth} {...props} />
+             )))
+          )} />
+          {/* <AuthRoute path="/select" component={SelectChild} redirectTo="/restricted" auth={auth} authenticated={auth.isAuthenticated()} /> */}
+          {/* <AuthRoute path="/name/:username" component={DisplayByName} redirectTo="/restricted" auth={auth} authenticated={auth.isAuthenticated()} />           */}
           <Route exact path="/" component={Home}/>
-          <Route exact path="/restricted" component={Restricted}/>          
-          {/* <Route path="/name/:username" component={DisplayByName} /> */}
-          {/* <Route path="/select" component={SelectChild}/>                                                         */}
-          <Route path="/upload" component={Upload} onEnter={requireAuth} />
-          {/* <Route path="/all" component={Display} onEnter={requireAuth} />           */}
-          <Route path="/callback" component={Callback} onEnter={requireAuth} />
+          <Route exact render={(props) => <Restricted auth={auth} {...props} />} path="/restricted" />          
+          {/* <Route path="/upload" component={Upload} onEnter={auth.requireAuth} /> */}
+          {/* <Route path="/all" component={Display} onEnter={Auth.requireAuth} />           */}
+          <Route path="/callback" render={(props) => {
+            handleAuthentication(props);
+            return <Callback {...props} /> 
+          }}/>  
         </div>
         </Router>
     </div>

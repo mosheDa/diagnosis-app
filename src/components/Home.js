@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import Nav from './Nav';
 import { login, logout, isLoggedIn } from '../utils/AuthService';
 import Button from '@material-ui/core/Button';
 import Img from 'react-image'
